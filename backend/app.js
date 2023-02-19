@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -14,7 +16,7 @@ const responseError = require('./middlewares/responseError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { notFoundError } = require('./utils/errors/NotFoundError');
 // eslint-disable-next-line no-unused-vars
-const { regexURL, DEFAULT_ALLOWED_METHODS } = require('./utils/constants');
+const { regexURL } = require('./utils/constants');
 
 const { PORT = 3000 } = process.env;
 const allowedCors = ['https://api.mesto-polka.students.nomoredomains.work', 'https://mesto-polexka.students.nomoredomains.work'];
@@ -36,12 +38,24 @@ app.use(cors(corsOptions));
 
 app.use(requestLogger);
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   }),
 }), login);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({

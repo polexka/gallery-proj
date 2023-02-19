@@ -1,5 +1,8 @@
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const { JWT_KEY } = require('../utils/constants');
+
+const { JWT_KEY } = process.env;
+
 const { authError } = require('../utils/errors/AccountError');
 
 // eslint-disable-next-line consistent-return
