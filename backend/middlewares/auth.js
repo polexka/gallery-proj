@@ -1,7 +1,7 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
-const { JWT_KEY } = process.env;
+const { JWT_KEY, NODE_ENV } = process.env;
 
 const { authError } = require('../utils/errors/AccountError');
 
@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, JWT_KEY);
+    payload = jwt.verify(token, (NODE_ENV === 'production' ? JWT_KEY : 'secret-key'));
   } catch (err) {
     return res.status(authError.statusCode).send({ message: authError.message });
   }
