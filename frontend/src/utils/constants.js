@@ -22,7 +22,9 @@ const avatarSelector = '.profile__image';
 const deleteSelector = '.popup_delete';
 const avatarLoadSelector = '.popup_avatar';
 
-const baseUrl = `https://api.mesto-polka.students.nomoredomains.work`;
+// const baseUrl = `https://api.mesto-polka.students.nomoredomains.work`;
+const baseUrl = `http://localhost:3000`;
+
 
 export {
   config,

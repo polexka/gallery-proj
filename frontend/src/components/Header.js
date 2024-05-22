@@ -10,6 +10,8 @@ function Header(props) {
     props.handleSignOut();
   }
 
+  console.log(props.loggedIn);
+
   return (
     <header className="header">
       <div className="logo"></div>
@@ -26,14 +28,24 @@ function Header(props) {
           </Link>
         </Route>
         <Route path="/">
-          <div className="header__title">
-            <p className="header__text">
-              {currentUser.email}
-            </p>
-            <Link to="/" className="link header__link" onClick={handleSignOut}>
-              Выйти
-            </Link>
-          </div>
+          {
+            props.loggedIn ? 
+            (
+              <div className="header__title">
+            
+                <Link to="/user/me" className="link header__link">
+                    {currentUser.email}
+                </Link>
+                <Link to="/" className="link header__link" onClick={handleSignOut}>
+                  Выйти
+                </Link>
+              </div>
+            ) : (
+              <Link to="/sign-in" className="link header__link">
+                <h2 className="signup__text">Войти</h2>
+              </Link>
+            )
+          }
         </Route>
       </Switch>
 

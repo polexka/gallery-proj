@@ -19,27 +19,37 @@ import AddPlacePopup from './AddPlacePopup';
 import { api } from '../utils/Api';
 import { CurrentAuthContext } from '../contexts/CurrentAuthContext';
 import { auth } from '../utils/Auth';
+import UserProfile from './UserProfile';
+import { useLocation } from 'react-router-dom/cjs/react-router-dom';
+import Feed from './Feed';
 
 function App() {
-
   const history = useHistory();
-
+  const location = useLocation();
 
   const [currentAuth, setAuth] = useState({});
   const [loginStatus, setLoginStatus] = useState(false);
   const [infoTooltipStatus, setInfoTooltipStatus] = useState(false);
 
   useEffect(() => {
+    const from = location.pathname;
     auth.authorization(localStorage.getItem('token'))
       .then((res) => {
         setAuth(res);
+        console.log(res);
         setLoginStatus(true);
-        history.push('/');
+        // history.push('/');
+        history.push(from);
       })
       .catch((err) => {
         console.log(`Ошибка авторизации: ${err}`);
         setLoginStatus(false);
       })
+
+      // api.getUser({_id: '664d5eff96ea345bcc2aa6ad'})
+      // .then((res) => {
+      //   console.log(res);
+      // })
   }, [loginStatus])
 
   const [isEditProfilePopupOpen, setEditProfilePopup] = useState(false);
@@ -92,6 +102,7 @@ function App() {
   useEffect(() => {
     api.getInitialCards()
       .then((res) => {
+        console.log(res);
         setCards([...res.reverse()]);
       })
       .catch((err) => {
@@ -159,6 +170,7 @@ function App() {
             setAuth(res);
             setLoginStatus(true);
             history.push('/');
+
           })
           .catch((err) => {
             console.log(`Ошибка авторизации: ${err}`);
@@ -191,13 +203,13 @@ function App() {
 
     <CurrentAuthContext.Provider value={currentAuth}>
       <div className="page">
-        <Header handleSignOut={handleSignOut} />
+        <Header handleSignOut={handleSignOut} loggedIn={loginStatus} />
         <Switch>
 
           <Route path="/sign-in">
             <Login
               loggedIn={loginStatus}
-
+  
               onSubmit={handleSignInSubmit} />
           </Route>
 
@@ -209,7 +221,7 @@ function App() {
           </Route>
 
           <ProtectedRoute
-            path="/"
+            path="/user/me"
             loggedIn={loginStatus}
 
             component={Main}
@@ -221,6 +233,29 @@ function App() {
             onCardDelete={handleCardDelete}
             cards={cards}
           />
+
+          
+          <ProtectedRoute
+            path="/user/:userId"
+            loggedIn={loginStatus}
+
+            component={UserProfile}
+          />
+
+          {/* <ProtectedRoute 
+            path="/"
+            loggedIn={loginStatus}
+            component={Feed}
+            cards={cards}
+
+          /> */}
+
+          <Route path="/">
+            <Feed
+              loggedIn={loginStatus}
+  
+              cards={cards} />
+          </Route>
         </Switch>
 
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />

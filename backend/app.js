@@ -19,7 +19,12 @@ const { notFoundError } = require('./utils/errors/NotFoundError');
 const { regexURL } = require('./utils/constants');
 
 const { PORT = 3000 } = process.env;
-const allowedCors = ['https://api.mesto-polka.students.nomoredomains.work', 'https://mesto-polexka.students.nomoredomains.work'];
+const allowedCors = [
+  // 'https://api.mesto-polka.students.nomoredomains.work', 
+  // 'https://mesto-polexka.students.nomoredomains.work', 
+  'http://192.168.0.105:3001', 
+  'http://localhost:3001',
+];
 const corsOptions = {
   origin: allowedCors,
   optionsSuccessStatus: 200,
@@ -29,7 +34,7 @@ const app = express();
 app.use(cookieParser());
 
 mongoose.set('strictQuery', true);
-mongoose.connect('mongodb://localhost:27017/mestodb');
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -61,10 +66,10 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
+app.use('/cards', require('./routes/cards'));
 app.use(auth);
 
 app.use('/users', require('./routes/users'));
-app.use('/cards', require('./routes/cards'));
 
 app.use((req, res) => {
   res.status(notFoundError.statusCode).send({ message: notFoundError.message });

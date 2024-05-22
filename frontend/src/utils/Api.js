@@ -97,6 +97,15 @@ class Api {
     })
       .then(this._checkResponse);
   }
+
+  getUser(data) {
+    return fetch(`${this._baseUrl}/users/${data._id}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: this._headers
+    })
+    .then(this._checkResponse);
+  }
 }
 
 export const api = new Api({
