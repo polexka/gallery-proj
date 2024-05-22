@@ -1,14 +1,21 @@
 sudo apt-get update
+
 sudo apt-get install -y gnupg
+
 wget -qO - https://www.mongodb.org/static/pgp/server-3.6.asc | sudo apt-key add -
+
 echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
 
 # Устанавливаем MongoDB 3.6
+
 sudo apt-get update
+
 sudo apt-get install -y mongodb-org
 
 # Запускаем MongoDB
+
 sudo systemctl start mongod
+
 sudo systemctl enable mongod
 
 # Проект Место
